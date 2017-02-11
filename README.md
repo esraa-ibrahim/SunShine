@@ -11,5 +11,5 @@ Lessons Learned :
 6. Android Permission System
 7. Parsing Json response [used Google Gson library]
 8. Explicit and Implicit Intents
-9. Shared Perefernces and PreferenceActivity
+9. Shared Preferences and PreferenceActivity
 10. Intent Resoultion and Intent Filters

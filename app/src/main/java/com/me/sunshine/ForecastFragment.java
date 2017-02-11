@@ -1,8 +1,12 @@
 package com.me.sunshine;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,8 +16,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.me.sunshine.json.BaseWeatherForecastJson;
@@ -53,40 +59,20 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        String[] forecastArray = new String[]{
-                "Today - Sunny - 88/63",
-                "Tomorrow - Cloudy - 88/63",
-                "Weds - Sunny - 88/63",
-                "Mon - Sunny - 88/63",
-                "Sat - Sunny - 88/63",
-                "Tomorrow - Cloudy - 88/63",
-                "Weds - Sunny - 88/63",
-                "Mon - Sunny - 88/63",
-                "Sat - Sunny - 88/63",
-                "Tomorrow - Cloudy - 88/63",
-                "Weds - Sunny - 88/63",
-                "Mon - Sunny - 88/63",
-                "Sat - Sunny - 88/63",
-                "Tomorrow - Cloudy - 88/63",
-                "Weds - Sunny - 88/63",
-                "Mon - Sunny - 88/63",
-                "Sat - Sunny - 88/63",
-                "Tomorrow - Cloudy - 88/63",
-                "Weds - Sunny - 88/63",
-                "Mon - Sunny - 88/63",
-                "Sat - Sunny - 88/63",
-                "Tomorrow - Cloudy - 88/63",
-                "Weds - Sunny - 88/63",
-                "Mon - Sunny - 88/63",
-                "Sat - Sunny - 88/63"};
-
-        List<String> weekForecast = new ArrayList<>(Arrays.asList(forecastArray));
-
         mForecastAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item_forecast,
-                R.id.list_item_forecast_textview, weekForecast);
+                R.id.list_item_forecast_textview, new ArrayList<String>());
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT, mForecastAdapter.getItem(position));
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }
@@ -101,10 +87,25 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
-            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-            fetchWeatherTask.execute("Cairo");
+            updateWeather();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateWeather() {
+        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+        // Cairo Id is 360630
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String cityId = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        String unit = prefs.getString(getString(R.string.pref_temp_key), getString(R.string.pref_temp_default));
+        fetchWeatherTask.execute(cityId, unit);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
     }
 
     private class FetchWeatherTask extends AsyncTask <String, Void, String[]> {
@@ -117,8 +118,8 @@ public class ForecastFragment extends Fragment {
 
         private String APP_ID_PARAM = "appid";
 
-        // City name or Country code
-        private String QUERY_PARAM = "q";
+        // City Id
+        private String QUERY_PARAM = "id";
 
         // Data format JSON, XML, or HTML format
         private String FORMAT_PARAM = "mode";
@@ -154,7 +155,7 @@ public class ForecastFragment extends Fragment {
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, params[0])
                         .appendQueryParameter(FORMAT_PARAM, format)
-                        .appendQueryParameter(UNITS_PARAM, units)
+                        .appendQueryParameter(UNITS_PARAM, params[1])
                         .appendQueryParameter(DAYS_PARAM, Integer.toString(days))
                         .appendQueryParameter(APP_ID_PARAM, APPID).build();
 

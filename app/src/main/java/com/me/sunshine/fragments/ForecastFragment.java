@@ -1,6 +1,5 @@
-package com.me.sunshine;
+package com.me.sunshine.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -19,9 +18,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.me.sunshine.R;
+import com.me.sunshine.activities.DetailActivity;
 import com.me.sunshine.json.BaseWeatherForecastJson;
 import com.me.sunshine.json.Day;
 
@@ -33,7 +33,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 

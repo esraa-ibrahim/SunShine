@@ -1,4 +1,4 @@
-package com.me.sunshine;
+package com.me.sunshine.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.me.sunshine.fragments.ForecastFragment;
+import com.me.sunshine.R;
 
 
 public class MainActivity extends AppCompatActivity {

@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class Weather implements Serializable{
     @SerializedName("id")
-    private double id;
+    private int id;
 
     @SerializedName("main")
     private String main;
@@ -18,7 +18,7 @@ public class Weather implements Serializable{
     @SerializedName("icon")
     private String icon;
 
-    public double getId() {
+    public int getId() {
         return id;
     }
 

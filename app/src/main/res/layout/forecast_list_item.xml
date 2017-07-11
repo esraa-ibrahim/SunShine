@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".7"
+        android:src="@drawable/ic_clear"
+        android:id="@+id/weather_icon"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="Tomorrow"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:id="@+id/weather_day"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="18°"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:id="@+id/weather_max_temp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="Clouds"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:id="@+id/weather_status"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="12°"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:id="@+id/weather_min_temp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -22,6 +22,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.me.sunshine.R;
 import com.me.sunshine.activities.DetailActivity;
+import com.me.sunshine.adapters.ForecastListAdapter;
 import com.me.sunshine.json.BaseWeatherForecastJson;
 import com.me.sunshine.json.Day;
 
@@ -40,7 +41,8 @@ import java.util.List;
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
 public class ForecastFragment extends Fragment {
-    private ArrayAdapter<String> mForecastAdapter;
+    private ForecastListAdapter mForecastAdapter;
+    private ListView listView;
 
     public ForecastFragment() {
     }
@@ -58,18 +60,18 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mForecastAdapter = new ArrayAdapter<>(getActivity(), R.layout.list_item_forecast,
-                R.id.list_item_forecast_textview, new ArrayList<String>());
+        mForecastAdapter = new ForecastListAdapter(getContext(), new ArrayList<Day>());
 
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        listView = rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, mForecastAdapter.getItem(position));
-                startActivity(intent);
+                // TODO Update the intent to hold the day data before opening the detail screen
+//                Intent intent = new Intent(getActivity(), DetailActivity.class);
+//                intent.putExtra(Intent.EXTRA_TEXT, mForecastAdapter.getItem(position));
+//                startActivity(intent);
             }
         });
 
@@ -107,7 +109,7 @@ public class ForecastFragment extends Fragment {
         updateWeather();
     }
 
-    private class FetchWeatherTask extends AsyncTask <String, Void, String[]> {
+    private class FetchWeatherTask extends AsyncTask <String, Void, List<Day>> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
@@ -131,7 +133,7 @@ public class ForecastFragment extends Fragment {
         private String DAYS_PARAM = "cnt";
 
         @Override
-        protected String[] doInBackground(String... params) {
+        protected List<Day> doInBackground(String... params) {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -141,7 +143,8 @@ public class ForecastFragment extends Fragment {
             String forecastJsonStr = null;
 
             // Will contain the weather data
-            String[] weatherForecastData = null;
+            //String[] weatherForecastData = null;
+            List<Day> weatherDays = null;
 
             try {
                 // Construct the URL for the OpenWeatherMap query
@@ -193,7 +196,7 @@ public class ForecastFragment extends Fragment {
 
                 Gson gson = new Gson();
                 BaseWeatherForecastJson weatherForecastJson = gson.fromJson(forecastJsonStr, BaseWeatherForecastJson.class);
-                weatherForecastData = getWeatherForecastData(weatherForecastJson);
+                weatherDays = weatherForecastJson.getDaysList();
 
                 Log.v(LOG_TAG, weatherForecastJson.getCity().getName());
             } catch (IOException e) {
@@ -213,42 +216,14 @@ public class ForecastFragment extends Fragment {
                     }
                 }
             }
-            return weatherForecastData;
-        }
-
-        private String[] getWeatherForecastData(BaseWeatherForecastJson weatherForecastJson) {
-            List<Day> days = weatherForecastJson.getDaysList();
-            String[] formattedWeatherData = new String[days.size()];
-            String dateString, weatherStatus;
-            Day day;
-            long dt;
-            double min, max;
-
-            for (int i = 0; i < days.size(); i++) {
-                day = days.get(i);
-                dt = day.getDt();
-                dateString = getReadableDateString(dt);
-                weatherStatus = day.getWeather().get(0).getMain();
-                min = day.getTemp().getMin();
-                max = day.getTemp().getMax();
-
-                formattedWeatherData[i] = dateString + " - " + weatherStatus + " - " + ((int) min) + "/" + ((int) max);
-            }
-
-            return formattedWeatherData;
-        }
-
-        private String getReadableDateString(long time) {
-            Date d = new Date(time * 1000);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E, MMM d");
-            return simpleDateFormat.format(d).toString();
+            return weatherDays;
         }
 
         @Override
-        protected void onPostExecute(String[] weatherForecastData) {
-            if (weatherForecastData != null) {
-                mForecastAdapter.clear();
-                mForecastAdapter.addAll(weatherForecastData);
+        protected void onPostExecute(List<Day> weatherDays) {
+            if (weatherDays != null) {
+                listView.setAdapter(new ForecastListAdapter(getContext(), weatherDays));
+                mForecastAdapter.notifyDataSetChanged();
             }
         }
     }

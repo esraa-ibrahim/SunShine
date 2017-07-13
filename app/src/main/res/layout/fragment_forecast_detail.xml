@@ -1,0 +1,116 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.me.sunshine.fragments.ForecastDetailFragment"
+    android:orientation="vertical"
+    android:id="@+id/forecast_detail_fragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tomorrow"
+        android:textColor="@android:color/black"
+        android:id="@+id/day"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-condensed"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="June 16"
+        android:id="@+id/date"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:fontFamily="sans-serif-condensed"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="96sp"
+                android:textColor="@android:color/black"
+                android:text="18°"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/max_temp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="48sp"
+                android:textColor="@color/gray"
+                android:text="12°"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/min_temp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.8"
+                android:src="@drawable/art_clear"
+                android:id="@+id/weather_image"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Clear"
+                android:textColor="@color/gray"
+                android:textSize="22sp"
+                android:id="@+id/status"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Humidity: 71 %"
+        android:textSize="22sp"
+        android:textColor="@color/gray"
+        android:fontFamily="sans-serif-light"
+        android:id="@+id/humidity"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pressure: 1016 hPa"
+        android:textSize="22sp"
+        android:textColor="@color/gray"
+        android:fontFamily="sans-serif-light"
+        android:id="@+id/pressure"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wind: 22 km/h NW"
+        android:textSize="22sp"
+        android:textColor="@color/gray"
+        android:fontFamily="sans-serif-light"
+        android:id="@+id/wind"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>

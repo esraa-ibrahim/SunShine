@@ -10,11 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.me.sunshine.fragments.ForecastFragment;
 import com.me.sunshine.R;
+import com.me.sunshine.fragments.ForecastDetailFragment;
+import com.me.sunshine.fragments.ForecastFragment;
+import com.me.sunshine.json.Day;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ForecastFragment.OnForecastItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,25 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             Toast.makeText(MainActivity.this, "No App to open the location on map", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onListItemClicked(Day dayData) {
+        ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.forecast_fragment);
+
+        if (forecastFragment != null) {
+            // If forecast frag is available, we're in two-pane layout
+        } else {
+            // Otherwise, we're in the one-pane layout and must swap frags
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("DAY_DATA", dayData);
+            ForecastDetailFragment forecastDetailFragment = ForecastDetailFragment.newInstance();
+            forecastDetailFragment.setArguments(bundle);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, forecastDetailFragment)
+                    .addToBackStack(null).commit();
         }
     }
 }

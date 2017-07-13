@@ -1,6 +1,6 @@
 package com.me.sunshine.fragments;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,12 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.me.sunshine.R;
-import com.me.sunshine.activities.DetailActivity;
 import com.me.sunshine.adapters.ForecastListAdapter;
 import com.me.sunshine.json.BaseWeatherForecastJson;
 import com.me.sunshine.json.Day;
@@ -32,9 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +40,8 @@ import java.util.List;
 public class ForecastFragment extends Fragment {
     private ForecastListAdapter mForecastAdapter;
     private ListView listView;
+    private View headerView;
+    private OnForecastItemSelectedListener mForecastItemSelectedListener;
 
     public ForecastFragment() {
     }
@@ -58,20 +57,20 @@ public class ForecastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_forecast, container, false);
+        headerView = LayoutInflater.from(getContext()).inflate(R.layout.list_view_header, null);
+        listView = rootView.findViewById(R.id.listview_forecast);
 
         mForecastAdapter = new ForecastListAdapter(getContext(), new ArrayList<Day>());
 
-        listView = rootView.findViewById(R.id.listview_forecast);
+        listView.addHeaderView(headerView);
         listView.setAdapter(mForecastAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Update the intent to hold the day data before opening the detail screen
-//                Intent intent = new Intent(getActivity(), DetailActivity.class);
-//                intent.putExtra(Intent.EXTRA_TEXT, mForecastAdapter.getItem(position));
-//                startActivity(intent);
+                // Open ForecastDetailFragment and pass current day weather to it
+                mForecastItemSelectedListener.onListItemClicked((Day) parent.getItemAtPosition(position));
             }
         });
 
@@ -109,7 +108,7 @@ public class ForecastFragment extends Fragment {
         updateWeather();
     }
 
-    private class FetchWeatherTask extends AsyncTask <String, Void, List<Day>> {
+    private class FetchWeatherTask extends AsyncTask<String, Void, BaseWeatherForecastJson> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
@@ -133,7 +132,7 @@ public class ForecastFragment extends Fragment {
         private String DAYS_PARAM = "cnt";
 
         @Override
-        protected List<Day> doInBackground(String... params) {
+        protected BaseWeatherForecastJson doInBackground(String... params) {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -143,8 +142,7 @@ public class ForecastFragment extends Fragment {
             String forecastJsonStr = null;
 
             // Will contain the weather data
-            //String[] weatherForecastData = null;
-            List<Day> weatherDays = null;
+            BaseWeatherForecastJson weatherForecastJson = null;
 
             try {
                 // Construct the URL for the OpenWeatherMap query
@@ -195,8 +193,7 @@ public class ForecastFragment extends Fragment {
                 Log.v(LOG_TAG, forecastJsonStr);
 
                 Gson gson = new Gson();
-                BaseWeatherForecastJson weatherForecastJson = gson.fromJson(forecastJsonStr, BaseWeatherForecastJson.class);
-                weatherDays = weatherForecastJson.getDaysList();
+                weatherForecastJson = gson.fromJson(forecastJsonStr, BaseWeatherForecastJson.class);
 
                 Log.v(LOG_TAG, weatherForecastJson.getCity().getName());
             } catch (IOException e) {
@@ -216,15 +213,44 @@ public class ForecastFragment extends Fragment {
                     }
                 }
             }
-            return weatherDays;
+            return weatherForecastJson;
         }
 
         @Override
-        protected void onPostExecute(List<Day> weatherDays) {
+        protected void onPostExecute(BaseWeatherForecastJson weatherForecastJson) {
+            List<Day> weatherDays = weatherForecastJson.getDaysList();
             if (weatherDays != null) {
+                // Set current city and country
+                ((TextView) headerView.findViewById(R.id.header)).setText(weatherForecastJson.getCity().getName() + ", "
+                        + weatherForecastJson.getCity().getCountry());
+
                 listView.setAdapter(new ForecastListAdapter(getContext(), weatherDays));
                 mForecastAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mForecastItemSelectedListener = (OnForecastItemSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnForecastItemSelectedListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mForecastItemSelectedListener = null;
+    }
+
+    public interface OnForecastItemSelectedListener {
+        void onListItemClicked(Day dayData);
     }
 }

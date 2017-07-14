@@ -218,8 +218,8 @@ public class ForecastFragment extends Fragment {
 
         @Override
         protected void onPostExecute(BaseWeatherForecastJson weatherForecastJson) {
-            List<Day> weatherDays = weatherForecastJson.getDaysList();
-            if (weatherDays != null) {
+            if (weatherForecastJson != null) {
+                List<Day> weatherDays = weatherForecastJson.getDaysList();
                 // Set current city and country
                 ((TextView) headerView.findViewById(R.id.header)).setText(weatherForecastJson.getCity().getName() + ", "
                         + weatherForecastJson.getCity().getCountry());

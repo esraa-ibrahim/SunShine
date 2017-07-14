@@ -7,7 +7,6 @@
     <string name="cloudy">Cloudy</string>
     <string name="eight">8</string>
     <string name="twentyOne">21</string>
-    <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_settings">Settings</string>
     <string name="pref_location_label">Location</string>
     <string name="pref_location_key" translatable="false">location</string>

@@ -1,8 +1,13 @@
 package com.me.sunshine.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,8 +24,9 @@ import java.util.Locale;
 public class ForecastDetailFragment extends Fragment {
     // the fragment initialization parameters
     private static final String ARG_DAY_DATA = "DAY_DATA";
-
     private Day mParamDayData;
+    private final String FORECAST_SHARE_HASH_TAG = " #SunshineApp";
+    private String mForecastData;
 
     public ForecastDetailFragment() {
         // Required empty public constructor
@@ -43,6 +49,8 @@ public class ForecastDetailFragment extends Fragment {
         if (getArguments() != null) {
             mParamDayData = (Day) getArguments().getSerializable(ARG_DAY_DATA);
         }
+        // Tell the fragment that it will handle menu items
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -63,8 +71,8 @@ public class ForecastDetailFragment extends Fragment {
 
         tvDay.setText(DateUtils.getDayNameFromLongDate(getContext(), mParamDayData.getDt()));
         tvDate.setText(DateUtils.getDateStringFromLongDate(mParamDayData.getDt(), new SimpleDateFormat("MMMM dd", Locale.US)));
-        tvMaxTemp.setText(Integer.toString((int)mParamDayData.getTemp().getMax())+"°");
-        tvMinTemp.setText(Integer.toString((int)mParamDayData.getTemp().getMin())+"°");
+        tvMaxTemp.setText(String.format(Locale.US, "%s°",Integer.toString((int)mParamDayData.getTemp().getMax())));
+        tvMinTemp.setText(String.format(Locale.US, "%s°",Integer.toString((int)mParamDayData.getTemp().getMin())));
         switch (mParamDayData.getWeather().get(0).getId()) {
             // Storm
             case 200: case 201: case 202: case 210: case 211:
@@ -115,6 +123,34 @@ public class ForecastDetailFragment extends Fragment {
         tvHumidity.setText(String.format(Locale.US, getString(R.string.humidity_str_format), mParamDayData.getHumidity()));
         tvPressure.setText(String.format(Locale.US, getString(R.string.pressure_str_format), (int)mParamDayData.getPressure()));
         tvWind.setText(String.format(Locale.US, getString(R.string.wind_str_format), mParamDayData.getSpeed()));
+
+        mForecastData = String.format(Locale.US, "%s %s\nMax Temp: %s\nMin Temp: %s\nWeather Status: %s",
+                tvDay.getText().toString(), tvDate.getText().toString(), tvMaxTemp.getText().toString(),
+                tvMinTemp.getText().toString(), tvStatus.getText().toString());
         return forecastDetailView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.detailfragment, menu);
+
+        ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
+
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(createShareForecastIntent());
+        }
+    }
+
+    /***
+     * Create intent for sharing current weather data
+     * @return the sharing intent
+     */
+    private Intent createShareForecastIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mForecastData + FORECAST_SHARE_HASH_TAG);
+        shareIntent.setType("text/plain");
+        return shareIntent;
     }
 }

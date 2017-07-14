@@ -13,6 +13,7 @@ import com.me.sunshine.json.Day;
 import com.me.sunshine.utils.DateUtils;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Esraa on 7/11/17.
@@ -64,9 +65,9 @@ public class ForecastListAdapter extends BaseAdapter {
 
         Day day = getItem(position);
         holder.tvDay.setText(DateUtils.getDayNameFromLongDate(mContext, day.getDt()));
-        holder.tvMaxTemp.setText(Integer.toString((int)day.getTemp().getMax())+"°");
+        holder.tvMaxTemp.setText(String.format(Locale.US, "%s°",Integer.toString((int)day.getTemp().getMax())));
         holder.tvStatus.setText(day.getWeather().get(0).getMain());
-        holder.tvMinTemp.setText(Integer.toString((int)day.getTemp().getMin())+"°");
+        holder.tvMinTemp.setText(String.format(Locale.US, "%s°",Integer.toString((int)day.getTemp().getMin())));
 
         switch (day.getWeather().get(0).getId()) {
             // Storm

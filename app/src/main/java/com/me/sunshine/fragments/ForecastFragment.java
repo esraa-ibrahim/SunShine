@@ -46,6 +46,17 @@ public class ForecastFragment extends Fragment {
     public ForecastFragment() {
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment ForecastDetailFragment.
+     */
+    public static ForecastFragment newInstance() {
+        ForecastFragment fragment = new ForecastFragment();
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +74,7 @@ public class ForecastFragment extends Fragment {
 
         mForecastAdapter = new ForecastListAdapter(getContext(), new ArrayList<Day>());
 
-        listView.addHeaderView(headerView);
+        listView.addHeaderView(headerView, null, false);
         listView.setAdapter(mForecastAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -226,6 +237,10 @@ public class ForecastFragment extends Fragment {
 
                 listView.setAdapter(new ForecastListAdapter(getContext(), weatherDays));
                 mForecastAdapter.notifyDataSetChanged();
+                boolean mIsDualPane = getActivity().findViewById(R.id.container) == null;
+                if (mIsDualPane) {
+                    mForecastItemSelectedListener.onListItemClicked(weatherDays.get(0));
+                }
             }
         }
     }

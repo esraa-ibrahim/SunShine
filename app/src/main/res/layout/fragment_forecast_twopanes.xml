@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ForecastFragment"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <fragment
+        android:id="@+id/forecast_fragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:name="com.me.sunshine.fragments.ForecastFragment"
+        tools:layout="@layout/fragment_forecast" />
+    <fragment
+        android:id="@+id/forecast_detail_fragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.6"
+        android:name="com.me.sunshine.fragments.ForecastDetailFragment"
+        tools:layout="@layout/fragment_forecast_detail"
+        android:layout_marginLeft="10dp"/>
+
+</LinearLayout>

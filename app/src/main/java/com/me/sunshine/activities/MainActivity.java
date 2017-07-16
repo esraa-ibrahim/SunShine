@@ -16,7 +16,9 @@ import com.me.sunshine.fragments.ForecastFragment;
 import com.me.sunshine.json.Day;
 
 
-public class MainActivity extends AppCompatActivity implements ForecastFragment.OnForecastItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements
+        ForecastFragment.OnForecastItemSelectedListener {
+    private boolean mIsDualPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +30,20 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
+
+        mIsDualPane = findViewById(R.id.container) == null;
+
+        if (!mIsDualPane) {
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            // Add the fragment to the 'container' FrameLayout
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
-                    .commit();
+                    .add(R.id.container, ForecastFragment.newInstance()).commit();
         }
     }
 
@@ -73,10 +85,16 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
     @Override
     public void onListItemClicked(Day dayData) {
-        ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.forecast_fragment);
-
-        if (forecastFragment != null) {
+        if (mIsDualPane) {
             // If forecast frag is available, we're in two-pane layout
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("DAY_DATA", dayData);
+            ForecastDetailFragment forecastDetailFragment = ForecastDetailFragment.newInstance();
+            forecastDetailFragment.setArguments(bundle);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.forecast_detail_fragment, forecastDetailFragment)
+                    .commit();
         } else {
             // Otherwise, we're in the one-pane layout and must swap frags
             Bundle bundle = new Bundle();

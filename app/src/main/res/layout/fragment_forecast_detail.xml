@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tomorrow"
+        android:text=""
         android:textColor="@android:color/black"
         android:id="@+id/day"
         android:textSize="24sp"
@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="June 16"
+        android:text=""
         android:id="@+id/date"
         android:textSize="16sp"
         android:textColor="@color/gray"
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="96sp"
                 android:textColor="@android:color/black"
-                android:text="18°"
+                android:text=""
                 android:fontFamily="sans-serif-light"
                 android:id="@+id/max_temp"/>
 
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="48sp"
                 android:textColor="@color/gray"
-                android:text="12°"
+                android:text=""
                 android:fontFamily="sans-serif-light"
                 android:id="@+id/min_temp"/>
 
@@ -66,14 +66,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.8"
-                android:src="@drawable/art_clear"
                 android:id="@+id/weather_image"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Clear"
+                android:text=""
                 android:textColor="@color/gray"
                 android:textSize="22sp"
                 android:id="@+id/status"/>
@@ -84,7 +83,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Humidity: 71 %"
+        android:text=""
         android:textSize="22sp"
         android:textColor="@color/gray"
         android:fontFamily="sans-serif-light"
@@ -93,7 +92,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pressure: 1016 hPa"
+        android:text=""
         android:textSize="22sp"
         android:textColor="@color/gray"
         android:fontFamily="sans-serif-light"
@@ -102,7 +101,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Wind: 22 km/h NW"
+        android:text=""
         android:textSize="22sp"
         android:textColor="@color/gray"
         android:fontFamily="sans-serif-light"

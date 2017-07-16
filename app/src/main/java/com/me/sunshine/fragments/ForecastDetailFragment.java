@@ -56,6 +56,9 @@ public class ForecastDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (container != null) {
+            container.removeAllViews();
+        }
         // Inflate the layout for this fragment
         View forecastDetailView = inflater.inflate(R.layout.fragment_forecast_detail, container, false);
 
@@ -69,64 +72,100 @@ public class ForecastDetailFragment extends Fragment {
         TextView tvPressure = forecastDetailView.findViewById(R.id.pressure);
         TextView tvWind = forecastDetailView.findViewById(R.id.wind);
 
-        tvDay.setText(DateUtils.getDayNameFromLongDate(getContext(), mParamDayData.getDt()));
-        tvDate.setText(DateUtils.getDateStringFromLongDate(mParamDayData.getDt(), new SimpleDateFormat("MMMM dd", Locale.US)));
-        tvMaxTemp.setText(String.format(Locale.US, "%s°",Integer.toString((int)mParamDayData.getTemp().getMax())));
-        tvMinTemp.setText(String.format(Locale.US, "%s°",Integer.toString((int)mParamDayData.getTemp().getMin())));
-        switch (mParamDayData.getWeather().get(0).getId()) {
-            // Storm
-            case 200: case 201: case 202: case 210: case 211:
-            case 212: case 221: case 230: case 231: case 232:
-                ivDayImage.setImageResource(R.drawable.art_storm);
-                break;
+        if (mParamDayData != null) {
+            tvDay.setText(DateUtils.getDayNameFromLongDate(getContext(), mParamDayData.getDt()));
+            tvDate.setText(DateUtils.getDateStringFromLongDate(mParamDayData.getDt(), new SimpleDateFormat("MMMM dd", Locale.US)));
+            tvMaxTemp.setText(String.format(Locale.US, "%s°", Integer.toString((int) mParamDayData.getTemp().getMax())));
+            tvMinTemp.setText(String.format(Locale.US, "%s°", Integer.toString((int) mParamDayData.getTemp().getMin())));
+            switch (mParamDayData.getWeather().get(0).getId()) {
+                // Storm
+                case 200:
+                case 201:
+                case 202:
+                case 210:
+                case 211:
+                case 212:
+                case 221:
+                case 230:
+                case 231:
+                case 232:
+                    ivDayImage.setImageResource(R.drawable.art_storm);
+                    break;
 
-            // Clear
-            case 800:
-                ivDayImage.setImageResource(R.drawable.art_clear);
-                break;
+                // Clear
+                case 800:
+                    ivDayImage.setImageResource(R.drawable.art_clear);
+                    break;
 
-            // Light Cloud
-            case 801: case 802:
-                ivDayImage.setImageResource(R.drawable.art_light_clouds);
-                break;
+                // Light Cloud
+                case 801:
+                case 802:
+                    ivDayImage.setImageResource(R.drawable.art_light_clouds);
+                    break;
 
-            // Cloud
-            case 803: case 804:
-                ivDayImage.setImageResource(R.drawable.art_clouds);
-                break;
+                // Cloud
+                case 803:
+                case 804:
+                    ivDayImage.setImageResource(R.drawable.art_clouds);
+                    break;
 
-            // Fog
-            case 701: case 711: case 721: case 731: case 741:
-            case 751: case 761: case 762: case 771: case 781:
-                ivDayImage.setImageResource(R.drawable.art_fog);
-                break;
+                // Fog
+                case 701:
+                case 711:
+                case 721:
+                case 731:
+                case 741:
+                case 751:
+                case 761:
+                case 762:
+                case 771:
+                case 781:
+                    ivDayImage.setImageResource(R.drawable.art_fog);
+                    break;
 
-            // Light Rain
-            case 500: case 501: case 502: case 503: case 504:
-                ivDayImage.setImageResource(R.drawable.art_light_rain);
-                break;
+                // Light Rain
+                case 500:
+                case 501:
+                case 502:
+                case 503:
+                case 504:
+                    ivDayImage.setImageResource(R.drawable.art_light_rain);
+                    break;
 
-            // Rain
-            case 511: case 520: case 521: case 522: case 531:
-                ivDayImage.setImageResource(R.drawable.art_rain);
-                break;
+                // Rain
+                case 511:
+                case 520:
+                case 521:
+                case 522:
+                case 531:
+                    ivDayImage.setImageResource(R.drawable.art_rain);
+                    break;
 
-            // Snow
-            case 600: case 601: case 602: case 611: case 612:
-            case 615: case 616: case 620: case 621: case 622:
-                ivDayImage.setImageResource(R.drawable.art_snow);
-                break;
+                // Snow
+                case 600:
+                case 601:
+                case 602:
+                case 611:
+                case 612:
+                case 615:
+                case 616:
+                case 620:
+                case 621:
+                case 622:
+                    ivDayImage.setImageResource(R.drawable.art_snow);
+                    break;
+            }
+
+            tvStatus.setText(mParamDayData.getWeather().get(0).getMain());
+
+            tvHumidity.setText(String.format(Locale.US, getString(R.string.humidity_str_format), mParamDayData.getHumidity()));
+            tvPressure.setText(String.format(Locale.US, getString(R.string.pressure_str_format), (int) mParamDayData.getPressure()));
+            tvWind.setText(String.format(Locale.US, getString(R.string.wind_str_format), mParamDayData.getSpeed()));
+
+            mForecastData = String.format(Locale.US, "%s %s\nMax Temp: %s\nMin Temp: %s\nWeather Status: %s",
+                    tvDay.getText().toString(), tvDate.getText().toString(), tvMaxTemp.getText().toString(),
+                    tvMinTemp.getText().toString(), tvStatus.getText().toString());
         }
-
-        tvStatus.setText(mParamDayData.getWeather().get(0).getMain());
-
-        tvHumidity.setText(String.format(Locale.US, getString(R.string.humidity_str_format), mParamDayData.getHumidity()));
-        tvPressure.setText(String.format(Locale.US, getString(R.string.pressure_str_format), (int)mParamDayData.getPressure()));
-        tvWind.setText(String.format(Locale.US, getString(R.string.wind_str_format), mParamDayData.getSpeed()));
-
-        mForecastData = String.format(Locale.US, "%s %s\nMax Temp: %s\nMin Temp: %s\nWeather Status: %s",
-                tvDay.getText().toString(), tvDate.getText().toString(), tvMaxTemp.getText().toString(),
-                tvMinTemp.getText().toString(), tvStatus.getText().toString());
         return forecastDetailView;
     }
 

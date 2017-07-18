@@ -44,6 +44,9 @@ public class ForecastFragment extends Fragment {
     private View headerView;
     private OnForecastItemSelectedListener mForecastItemSelectedListener;
 
+    // Position of currently selected forecast item
+    private int mPositionSelected = 0;
+
     public ForecastFragment() {
     }
 
@@ -64,6 +67,10 @@ public class ForecastFragment extends Fragment {
 
         // Tell the fragment that it will handle menu items
         setHasOptionsMenu(true);
+
+        if (savedInstanceState != null) {
+            mPositionSelected = savedInstanceState.getInt(Constants.PREFS_CURRENT_POSITION, 0);
+        }
     }
 
     @Override
@@ -81,6 +88,8 @@ public class ForecastFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Because header is considered an item
+                mPositionSelected = position-1;
                 // Open ForecastDetailFragment and pass current day weather to it
                 mForecastItemSelectedListener.onListItemClicked((Day) parent.getItemAtPosition(position));
             }
@@ -221,10 +230,20 @@ public class ForecastFragment extends Fragment {
                 mForecastAdapter.notifyDataSetChanged();
 
                 if (Constants.isDualPane) {
-                    mForecastItemSelectedListener.onListItemClicked(weatherDays.get(0));
+                    // To make selection capable of highlighting list item
+                    listView.requestFocusFromTouch();
+                    // Because header is considered an item
+                    listView.setSelection(mPositionSelected+1);
+                    mForecastItemSelectedListener.onListItemClicked(weatherDays.get(mPositionSelected));
                 }
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Constants.PREFS_CURRENT_POSITION, mPositionSelected);
     }
 
     @Override

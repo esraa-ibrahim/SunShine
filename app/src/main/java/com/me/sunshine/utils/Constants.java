@@ -26,7 +26,10 @@ public class Constants {
             FORECAST_SHARE_HASH_TAG = " #SunshineApp",
 
             // ForecastDetailFragment argument constant
-            ARG_DAY_DATA = "DAY_DATA";
+            ARG_DAY_DATA = "DAY_DATA",
+
+            // Constant for saving current selected forecast item position
+            PREFS_CURRENT_POSITION = "CURRENT_POSITION";
 
     public static boolean isDualPane = false;
 }

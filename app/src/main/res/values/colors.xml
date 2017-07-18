@@ -2,4 +2,5 @@
 <resources>
     <color name="gray">#646464</color>
     <color name="actionBarColor">#5c6bc0</color>
+    <color name="selectionColor">#e8eaf6</color>
 </resources>

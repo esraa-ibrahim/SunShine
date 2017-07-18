@@ -16,6 +16,7 @@ import com.me.sunshine.R;
 import com.me.sunshine.fragments.ForecastDetailFragment;
 import com.me.sunshine.fragments.ForecastFragment;
 import com.me.sunshine.json.Day;
+import com.me.sunshine.utils.Constants;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -34,9 +35,9 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         // If container exists then we are in one-pane layout
-        mIsDualPane = findViewById(R.id.container) == null;
+        Constants.isDualPane = findViewById(R.id.container) == null;
 
-        if (!mIsDualPane) {
+        if (!Constants.isDualPane) {
             // However, if we're being restored from a previous state,
             // then we don't need to do anything and should return or else
             // we could end up with overlapping fragments.
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onListItemClicked(Day dayData) {
-        if (mIsDualPane) {
+        if (Constants.isDualPane) {
             // We are in dual-pane layout
             ForecastDetailFragment forecastDetailFragment = (ForecastDetailFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.forecast_detail_fragment);
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             // Otherwise, we're in the one-pane layout and must swap frags
             Bundle bundle = new Bundle();
-            bundle.putSerializable("DAY_DATA", dayData);
+            bundle.putSerializable(Constants.ARG_DAY_DATA, dayData);
             ForecastDetailFragment forecastDetailFragment = ForecastDetailFragment.newInstance();
             forecastDetailFragment.setArguments(bundle);
 

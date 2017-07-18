@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/header"
         android:fontFamily="sans-serif-medium"
-        android:textSize="30sp"/>
+        android:textSize="30sp"
+        android:textColor="@color/actionBarColor"/>
 
 </LinearLayout>

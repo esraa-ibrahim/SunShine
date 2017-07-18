@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.me.sunshine.R;
 import com.me.sunshine.json.Day;
+import com.me.sunshine.utils.Constants;
 import com.me.sunshine.utils.DateUtils;
 
 import java.text.SimpleDateFormat;
@@ -22,9 +23,6 @@ import java.util.Locale;
 
 
 public class ForecastDetailFragment extends Fragment {
-    // the fragment initialization parameters
-    private static final String ARG_DAY_DATA = "DAY_DATA";
-    private final String FORECAST_SHARE_HASH_TAG = " #SunshineApp";
     private String mForecastData;
     private ShareActionProvider mShareActionProvider;
     private TextView tvDay, tvDate, tvMaxTemp, tvMinTemp, tvStatus, tvHumidity, tvPressure, tvWind;
@@ -59,18 +57,19 @@ public class ForecastDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View forecastDetailView = inflater.inflate(R.layout.fragment_forecast_detail, container, false);
 
-         tvDay = forecastDetailView.findViewById(R.id.day);
-         tvDate = forecastDetailView.findViewById(R.id.date);
-         tvMaxTemp = forecastDetailView.findViewById(R.id.max_temp);
-         tvMinTemp = forecastDetailView.findViewById(R.id.min_temp);
-         ivDayImage = forecastDetailView.findViewById(R.id.weather_image);
-         tvStatus = forecastDetailView.findViewById(R.id.status);
-         tvHumidity = forecastDetailView.findViewById(R.id.humidity);
-         tvPressure = forecastDetailView.findViewById(R.id.pressure);
-         tvWind = forecastDetailView.findViewById(R.id.wind);
-        Day mParamDayData=null;
+        tvDay = forecastDetailView.findViewById(R.id.day);
+        tvDate = forecastDetailView.findViewById(R.id.date);
+        tvMaxTemp = forecastDetailView.findViewById(R.id.max_temp);
+        tvMinTemp = forecastDetailView.findViewById(R.id.min_temp);
+        ivDayImage = forecastDetailView.findViewById(R.id.weather_image);
+        tvStatus = forecastDetailView.findViewById(R.id.status);
+        tvHumidity = forecastDetailView.findViewById(R.id.humidity);
+        tvPressure = forecastDetailView.findViewById(R.id.pressure);
+        tvWind = forecastDetailView.findViewById(R.id.wind);
+
+        Day mParamDayData = null;
         if (getArguments() != null) {
-            mParamDayData = (Day) getArguments().getSerializable(ARG_DAY_DATA);
+            mParamDayData = (Day) getArguments().getSerializable(Constants.ARG_DAY_DATA);
         }
 
         bindData(mParamDayData);
@@ -199,7 +198,7 @@ public class ForecastDetailFragment extends Fragment {
      */
     private Intent createShareForecastIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, mForecastData + FORECAST_SHARE_HASH_TAG);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mForecastData + Constants.FORECAST_SHARE_HASH_TAG);
         shareIntent.setType("text/plain");
         return shareIntent;
     }

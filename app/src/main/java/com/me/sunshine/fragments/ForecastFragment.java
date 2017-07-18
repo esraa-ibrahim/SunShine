@@ -24,6 +24,7 @@ import com.me.sunshine.R;
 import com.me.sunshine.adapters.ForecastListAdapter;
 import com.me.sunshine.json.BaseWeatherForecastJson;
 import com.me.sunshine.json.Day;
+import com.me.sunshine.utils.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -123,25 +124,6 @@ public class ForecastFragment extends Fragment {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
-        private String BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
-
-        private String APPID = "c1f6e31d5bdb009ddbc73ba2ffdb4877";
-
-        private String APP_ID_PARAM = "appid";
-
-        // City Id
-        private String QUERY_PARAM = "id";
-
-        // Data format JSON, XML, or HTML format
-        private String FORMAT_PARAM = "mode";
-
-        // Units for returned temperature (metric for Celsius , imperial for Fahrenheit,
-        // if units param not set it is Kelvin by default)
-        private String UNITS_PARAM = "units";
-
-        // Number of days returned (from 1 to 16)
-        private String DAYS_PARAM = "cnt";
-
         @Override
         protected BaseWeatherForecastJson doInBackground(String... params) {
             // These two need to be declared outside the try/catch
@@ -160,15 +142,15 @@ public class ForecastFragment extends Fragment {
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
 
-                String format = "json", units = "metric";
+                String format = "json";
                 int days = 17;
 
-                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(QUERY_PARAM, params[0])
-                        .appendQueryParameter(FORMAT_PARAM, format)
-                        .appendQueryParameter(UNITS_PARAM, params[1])
-                        .appendQueryParameter(DAYS_PARAM, Integer.toString(days))
-                        .appendQueryParameter(APP_ID_PARAM, APPID).build();
+                Uri builtUri = Uri.parse(Constants.BASE_URL).buildUpon()
+                        .appendQueryParameter(Constants.QUERY_PARAM, params[0])
+                        .appendQueryParameter(Constants.FORMAT_PARAM, format)
+                        .appendQueryParameter(Constants.UNITS_PARAM, params[1])
+                        .appendQueryParameter(Constants.DAYS_PARAM, Integer.toString(days))
+                        .appendQueryParameter(Constants.APP_ID_PARAM, Constants.APPID).build();
 
                 Log.v(LOG_TAG, builtUri.toString());
 
@@ -237,8 +219,8 @@ public class ForecastFragment extends Fragment {
 
                 listView.setAdapter(new ForecastListAdapter(getContext(), weatherDays));
                 mForecastAdapter.notifyDataSetChanged();
-                boolean mIsDualPane = getActivity().findViewById(R.id.container) == null;
-                if (mIsDualPane) {
+
+                if (Constants.isDualPane) {
                     mForecastItemSelectedListener.onListItemClicked(weatherDays.get(0));
                 }
             }

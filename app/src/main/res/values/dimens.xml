@@ -8,5 +8,5 @@
     <dimen name="detail_min_temp_text_size">24sp</dimen>
     <dimen name="detail_bottom_text_size">14sp</dimen>
     <dimen name="detail_day_text_size">16sp</dimen>
-    <dimen name="detail_date_text_size">10sp</dimen>
+    <dimen name="detail_date_text_size">12sp</dimen>
 </resources>

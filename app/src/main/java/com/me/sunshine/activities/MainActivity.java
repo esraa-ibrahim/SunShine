@@ -21,7 +21,6 @@ import com.me.sunshine.utils.Constants;
 
 public class MainActivity extends AppCompatActivity implements
         ForecastFragment.OnForecastItemSelectedListener {
-    private boolean mIsDualPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

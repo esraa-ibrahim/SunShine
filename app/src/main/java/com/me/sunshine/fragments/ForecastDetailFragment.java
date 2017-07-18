@@ -24,9 +24,12 @@ import java.util.Locale;
 public class ForecastDetailFragment extends Fragment {
     // the fragment initialization parameters
     private static final String ARG_DAY_DATA = "DAY_DATA";
-    private Day mParamDayData;
     private final String FORECAST_SHARE_HASH_TAG = " #SunshineApp";
     private String mForecastData;
+    private ShareActionProvider mShareActionProvider;
+    private TextView tvDay, tvDate, tvMaxTemp, tvMinTemp, tvStatus, tvHumidity, tvPressure, tvWind;
+    private ImageView ivDayImage;
+
 
     public ForecastDetailFragment() {
         // Required empty public constructor
@@ -39,16 +42,13 @@ public class ForecastDetailFragment extends Fragment {
      * @return A new instance of fragment ForecastDetailFragment.
      */
     public static ForecastDetailFragment newInstance() {
-        ForecastDetailFragment fragment = new ForecastDetailFragment();
-        return fragment;
+        return new ForecastDetailFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParamDayData = (Day) getArguments().getSerializable(ARG_DAY_DATA);
-        }
+
         // Tell the fragment that it will handle menu items
         setHasOptionsMenu(true);
     }
@@ -56,22 +56,28 @@ public class ForecastDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (container != null) {
-            container.removeAllViews();
-        }
         // Inflate the layout for this fragment
         View forecastDetailView = inflater.inflate(R.layout.fragment_forecast_detail, container, false);
 
-        TextView tvDay = forecastDetailView.findViewById(R.id.day);
-        TextView tvDate = forecastDetailView.findViewById(R.id.date);
-        TextView tvMaxTemp = forecastDetailView.findViewById(R.id.max_temp);
-        TextView tvMinTemp = forecastDetailView.findViewById(R.id.min_temp);
-        ImageView ivDayImage = forecastDetailView.findViewById(R.id.weather_image);
-        TextView tvStatus = forecastDetailView.findViewById(R.id.status);
-        TextView tvHumidity = forecastDetailView.findViewById(R.id.humidity);
-        TextView tvPressure = forecastDetailView.findViewById(R.id.pressure);
-        TextView tvWind = forecastDetailView.findViewById(R.id.wind);
+         tvDay = forecastDetailView.findViewById(R.id.day);
+         tvDate = forecastDetailView.findViewById(R.id.date);
+         tvMaxTemp = forecastDetailView.findViewById(R.id.max_temp);
+         tvMinTemp = forecastDetailView.findViewById(R.id.min_temp);
+         ivDayImage = forecastDetailView.findViewById(R.id.weather_image);
+         tvStatus = forecastDetailView.findViewById(R.id.status);
+         tvHumidity = forecastDetailView.findViewById(R.id.humidity);
+         tvPressure = forecastDetailView.findViewById(R.id.pressure);
+         tvWind = forecastDetailView.findViewById(R.id.wind);
+        Day mParamDayData=null;
+        if (getArguments() != null) {
+            mParamDayData = (Day) getArguments().getSerializable(ARG_DAY_DATA);
+        }
 
+        bindData(mParamDayData);
+        return forecastDetailView;
+    }
+
+    public void bindData(Day mParamDayData) {
         if (mParamDayData != null) {
             tvDay.setText(DateUtils.getDayNameFromLongDate(getContext(), mParamDayData.getDt()));
             tvDate.setText(DateUtils.getDateStringFromLongDate(mParamDayData.getDt(), new SimpleDateFormat("MMMM dd", Locale.US)));
@@ -166,7 +172,6 @@ public class ForecastDetailFragment extends Fragment {
                     tvDay.getText().toString(), tvDate.getText().toString(), tvMaxTemp.getText().toString(),
                     tvMinTemp.getText().toString(), tvStatus.getText().toString());
         }
-        return forecastDetailView;
     }
 
     @Override
@@ -175,10 +180,16 @@ public class ForecastDetailFragment extends Fragment {
         menu.clear();
         inflater.inflate(R.menu.detailfragment, menu);
 
-        ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
 
+        setShareIntent();
+    }
+
+    // Call to update the share intent
+    public void setShareIntent() {
+        Intent shareIntent = createShareForecastIntent();
         if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(createShareForecastIntent());
+            mShareActionProvider.setShareIntent(shareIntent);
         }
     }
 

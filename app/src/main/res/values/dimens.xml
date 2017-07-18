@@ -3,4 +3,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="detail_max_temp_text_size">48sp</dimen>
+    <dimen name="detail_min_temp_text_size">24sp</dimen>
+    <dimen name="detail_bottom_text_size">14sp</dimen>
+    <dimen name="detail_day_text_size">16sp</dimen>
+    <dimen name="detail_date_text_size">10sp</dimen>
 </resources>

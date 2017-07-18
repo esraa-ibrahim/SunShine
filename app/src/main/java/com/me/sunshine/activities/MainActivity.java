@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_main);
 
+        // If container exists then we are in one-pane layout
         mIsDualPane = findViewById(R.id.container) == null;
 
         if (!mIsDualPane) {
@@ -46,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements
                     .add(R.id.container, ForecastFragment.newInstance()).commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,15 +88,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onListItemClicked(Day dayData) {
         if (mIsDualPane) {
-            // If forecast frag is available, we're in two-pane layout
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("DAY_DATA", dayData);
-            ForecastDetailFragment forecastDetailFragment = ForecastDetailFragment.newInstance();
-            forecastDetailFragment.setArguments(bundle);
+            // We are in dual-pane layout
+            ForecastDetailFragment forecastDetailFragment = (ForecastDetailFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.forecast_detail_fragment);
+            forecastDetailFragment.bindData(dayData);
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.forecast_detail_fragment, forecastDetailFragment)
-                    .commit();
+            // Set share intent for each selected item
+            forecastDetailFragment.setShareIntent();
         } else {
             // Otherwise, we're in the one-pane layout and must swap frags
             Bundle bundle = new Bundle();

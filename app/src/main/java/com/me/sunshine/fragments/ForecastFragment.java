@@ -57,8 +57,7 @@ public class ForecastFragment extends Fragment {
      * @return A new instance of fragment ForecastDetailFragment.
      */
     public static ForecastFragment newInstance() {
-        ForecastFragment fragment = new ForecastFragment();
-        return fragment;
+        return new ForecastFragment();
     }
 
     @Override
@@ -89,7 +88,7 @@ public class ForecastFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Because header is considered an item
-                mPositionSelected = position-1;
+                mPositionSelected = position - 1;
                 // Open ForecastDetailFragment and pass current day weather to it
                 mForecastItemSelectedListener.onListItemClicked((Day) parent.getItemAtPosition(position));
             }
@@ -118,7 +117,7 @@ public class ForecastFragment extends Fragment {
         FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
         // Cairo Id is 360630
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String cityId = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        String cityId = prefs.getString(getString(R.string.pref_location_id_key), getString(R.string.pref_location_default));
         String unit = prefs.getString(getString(R.string.pref_temp_key), getString(R.string.pref_temp_default));
         fetchWeatherTask.execute(cityId, unit);
     }
@@ -127,6 +126,36 @@ public class ForecastFragment extends Fragment {
     public void onStart() {
         super.onStart();
         updateWeather();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Constants.PREFS_CURRENT_POSITION, mPositionSelected);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mForecastItemSelectedListener = (OnForecastItemSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnForecastItemSelectedListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mForecastItemSelectedListener = null;
+    }
+
+    public interface OnForecastItemSelectedListener {
+        void onListItemClicked(Day dayData);
     }
 
     private class FetchWeatherTask extends AsyncTask<String, Void, BaseWeatherForecastJson> {
@@ -141,7 +170,7 @@ public class ForecastFragment extends Fragment {
             BufferedReader reader = null;
 
             // Will contain the raw JSON response as a string.
-            String forecastJsonStr = null;
+            String forecastJsonStr;
 
             // Will contain the weather data
             BaseWeatherForecastJson weatherForecastJson = null;
@@ -172,7 +201,7 @@ public class ForecastFragment extends Fragment {
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
                 if (inputStream == null) {
                     // Nothing to do.
                     return null;
@@ -184,7 +213,7 @@ public class ForecastFragment extends Fragment {
                     // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                     // But it does make debugging a *lot* easier if you print out the completed
                     // buffer for debugging.
-                    buffer.append(line + "\n");
+                    buffer.append(line).append("\n");
                 }
 
                 if (buffer.length() == 0) {
@@ -233,40 +262,10 @@ public class ForecastFragment extends Fragment {
                     // To make selection capable of highlighting list item
                     listView.requestFocusFromTouch();
                     // Because header is considered an item
-                    listView.setSelection(mPositionSelected+1);
+                    listView.setSelection(mPositionSelected + 1);
                     mForecastItemSelectedListener.onListItemClicked(weatherDays.get(mPositionSelected));
                 }
             }
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(Constants.PREFS_CURRENT_POSITION, mPositionSelected);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mForecastItemSelectedListener = (OnForecastItemSelectedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnForecastItemSelectedListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mForecastItemSelectedListener = null;
-    }
-
-    public interface OnForecastItemSelectedListener {
-        void onListItemClicked(Day dayData);
     }
 }

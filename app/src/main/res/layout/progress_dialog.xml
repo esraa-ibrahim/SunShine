@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/progress_dialog_title"
+        android:textSize="20sp"
+        android:textColor="@color/actionBarColor"/>
+
+    <com.daimajia.numberprogressbar.NumberProgressBar
+        android:id="@+id/number_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        custom:progress_reached_color="@color/actionBarColor"
+        custom:progress_unreached_color="@color/selectionColor"
+        style="@style/NumberProgressBar_Default"
+        custom:progress_unreached_bar_height="8dp"
+        custom:progress_reached_bar_height="10dp"
+        custom:progress_text_size="20sp"
+        custom:progress_text_color="@color/actionBarColor"
+        custom:progress_text_offset="2dp"
+        custom:progress_text_visibility="visible"
+        custom:progress_max="219695"/>
+
+</LinearLayout>

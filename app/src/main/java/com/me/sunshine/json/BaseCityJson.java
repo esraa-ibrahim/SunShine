@@ -1,29 +1,29 @@
 package com.me.sunshine.json;
 
-import org.json.*;
+import org.json.JSONObject;
 
 
 public class BaseCityJson {
-	
+
     private double id;
     private String country;
     private Coord coord;
     private String name;
-    
-    
-	public BaseCityJson () {
-		
-	}	
-        
-    public BaseCityJson (JSONObject json) {
-    
+
+
+    public BaseCityJson() {
+
+    }
+
+    public BaseCityJson(JSONObject json) {
+
         this.id = json.optDouble("id");
         this.country = json.optString("country");
         this.coord = new Coord(json.optJSONObject("coord"));
         this.name = json.optString("name");
 
     }
-    
+
     public double getId() {
         return this.id;
     }
@@ -57,5 +57,4 @@ public class BaseCityJson {
     }
 
 
-    
 }

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 
-public class Temp implements Serializable{
+public class Temp implements Serializable {
     @SerializedName("day")
     private double day;
 

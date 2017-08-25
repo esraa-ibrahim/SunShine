@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void showPreferredLocationOnMap() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String cityId = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        String cityId = prefs.getString(getString(R.string.pref_location_id_key), getString(R.string.pref_location_default));
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q", cityId).build());

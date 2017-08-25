@@ -28,7 +28,7 @@ public class DateUtils {
             return context.getString(R.string.tomorrow);
         }
 
-        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("EEEE", Locale.US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE", Locale.US);
         return simpleDateFormat.format(weatherDate.getTime());
     }
 

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class BaseWeatherForecastJson implements Serializable{
+public class BaseWeatherForecastJson implements Serializable {
     @SerializedName("city")
     private City city;
 

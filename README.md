@@ -1,5 +1,5 @@
 # SunShine
-SunShine is a Weather Forecasting App, that will be built step by step while watching Google tutorial for Android Developers https://www.udacity.com/course/ud853
+SunShine is a Weather Forecasting App, that will be built step by step while watching Google tutorial for Android Developers https://www.udacity.com/course/ud853 and there will be another added features outside the course content.
 
 Lessons Learned :
 
@@ -13,3 +13,6 @@ Lessons Learned :
 8. Explicit and Implicit Intents
 9. Shared Preferences and PreferenceActivity
 10. Intent Resoultion and Intent Filters
+11. Use [Fragments](https://developer.android.com/training/basics/fragments/index.html) to support single and multi pane layouts
+11. Read local large json files "[How To Read Large Json Files Using Gson](https://computersciencegeeks.wordpress.com/2017/08/16/read-large-json-files-using-gson/)"
+12. Using [Room](https://developer.android.com/topic/libraries/architecture/room.html) for cashing cities list in local database

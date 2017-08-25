@@ -1,6 +1,14 @@
 # SunShine
 SunShine is a Weather Forecasting App, that will be built step by step while watching Google tutorial for Android Developers https://www.udacity.com/course/ud853 and there will be another added features outside the course content.
 
+| ![Alt text](/screenshots/Screenshot_Phone_1.png) | ![Alt text](/screenshots/Screenshot_Phone_2.png) | ![Alt text](/screenshots/Screenshot_Phone_3.png) |
+|:---:|:---:|:---:|
+
+| ![Alt text](/screenshots/Screenshot_Tablet_Portrait_1.png) | ![Alt text](/screenshots/Screenshot_Tablet_Portrait_2.png) |
+|:---:|:---:|
+
+![Alt text](/screenshots/Screenshot_Tablet_Landscape.png)
+
 Lessons Learned :
 
 1. Android Studio, Gradle, and debugging tools

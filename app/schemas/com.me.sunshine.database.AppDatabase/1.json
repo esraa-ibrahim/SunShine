@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "244ab36364fd76cec2ea7a638a08d209",
+    "identityHash": "b6775533955d34b97138d1d86a7d11e9",
     "entities": [
       {
         "tableName": "city",
@@ -47,7 +47,7 @@
             "columnNames": [
               "name"
             ],
-            "createSql": "CREATE  INDEX `index_city_name`\nON `${TABLE_NAME}` (`name`)"
+            "createSql": "CREATE  INDEX `index_city_name` ON `${TABLE_NAME}` (`name`)"
           }
         ],
         "foreignKeys": []
@@ -55,7 +55,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"244ab36364fd76cec2ea7a638a08d209\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b6775533955d34b97138d1d86a7d11e9\")"
     ]
   }
 }

@@ -11,22 +11,18 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
 import com.me.sunshine.R;
 import com.me.sunshine.custom.CityDialogPreference;
-import com.me.sunshine.database.AppDatabase;
-import com.me.sunshine.database.dao.CityDao;
 import com.me.sunshine.database.entities.City;
-import com.me.sunshine.json.BaseCityJson;
 import com.me.sunshine.utils.Constants;
 import com.me.sunshine.utils.DialogUtils;
 import com.me.sunshine.utils.PrefsUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 public class SettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener,
@@ -102,41 +98,35 @@ public class SettingsActivity extends PreferenceActivity
     }
 
     /**
-     * Read json cities' list from local assets folder and insert it into database
+     * Copy cities database from assets folder to internal storage
      */
     private class FetchCitiesTask extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                InputStream is = getAssets().open("city_list.json");
-                JsonReader reader = new JsonReader(new InputStreamReader(is, "UTF-8"));
+                String dbName = "database_sunshine";
+                String path = getDatabasePath(dbName).getParentFile().toString();
 
-                // Read file in stream mode
-                reader.beginArray();
-
-                Gson gson = new GsonBuilder().create();
-
-                AppDatabase appDatabase = AppDatabase.getInstance(SettingsActivity.this);
-                CityDao cityDao = appDatabase.cityDao();
-                int count = 1;
-                while (reader.hasNext()) {
-                    BaseCityJson cityJson = gson.fromJson(reader, BaseCityJson.class);
-                    City city = new City();
-                    city.setUid((int) cityJson.getId());
-                    city.setName(cityJson.getName());
-                    city.setCountryName(cityJson.getCountry());
-                    city.setLatitude(cityJson.getCoord().getLat());
-                    city.setLongitude(cityJson.getCoord().getLon());
-
-                    // Insert city into database
-                    cityDao.insert(city);
-
-                    publishProgress(count);
-                    count++;
+                // If directory database doesn't exist create one
+                File dir = new File(path);
+                if (!dir.exists()) {
+                    dir.mkdir();
                 }
+                OutputStream myOutput = new FileOutputStream(path +"/"+ dbName);
+                byte[] buffer = new byte[1024];
+                int length;
+                int totalSize = 0;
+                InputStream myInput = getAssets().open(dbName);
+                while ((length = myInput.read(buffer)) > 0) {
+                    myOutput.write(buffer, 0, length);
+                    totalSize +=length;
+                    publishProgress(totalSize);
+                }
+                myInput.close();
+                myOutput.flush();
+                myOutput.close();
 
-                reader.close();
                 PrefsUtils.saveBool(SettingsActivity.this, Constants.PREFS_IS_CACHED_CITIES, true);
             } catch (IOException ex) {
                 Log.e(getClass().getSimpleName(), ex.getMessage());

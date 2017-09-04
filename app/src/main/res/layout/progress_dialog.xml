@@ -27,6 +27,6 @@
         custom:progress_text_color="@color/actionBarColor"
         custom:progress_text_offset="2dp"
         custom:progress_text_visibility="visible"
-        custom:progress_max="219695"/>
+        custom:progress_max="14000000"/>
 
 </LinearLayout>
